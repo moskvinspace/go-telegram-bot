@@ -22,6 +22,8 @@ func (b *Bot) Start() {
 	config := tgbotapi.UpdateConfig{Timeout: 60}
 	updates := getBotUpdatesChannel(bot, config)
 
+	initCommands()
+
 	// Loop through each update.
 	checkingBotUpdates(bot, updates)
 }
@@ -42,7 +44,7 @@ func getBotUpdatesChannel(bot *tgbotapi.BotAPI, config tgbotapi.UpdateConfig) tg
 func middleware(update tgbotapi.Update) (configs []tgbotapi.Chattable) {
 	switch {
 	case update.Message != nil:
-		// return handleMessage(update.Message)
+		return handleMessage(update.Message)
 	case update.CallbackQuery != nil:
 		// todo
 	}
