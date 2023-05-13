@@ -3,11 +3,13 @@ package telegram
 import (
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api/v5"
 	"log"
+	"strconv"
 )
 
 type Bot struct {
-	Token string
-	Debug bool
+	Token   string
+	OwnerId string
+	Debug   bool
 }
 
 func (b *Bot) Start() {
@@ -25,11 +27,17 @@ func (b *Bot) Start() {
 	initCommands()
 
 	// Loop through each update.
-	checkingBotUpdates(bot, updates)
+	b.checkingBotUpdates(bot, updates)
 }
 
-func checkingBotUpdates(bot *tgbotapi.BotAPI, updates tgbotapi.UpdatesChannel) {
+func (b *Bot) checkingBotUpdates(bot *tgbotapi.BotAPI, updates tgbotapi.UpdatesChannel) {
 	for update := range updates {
+		if b.isOwnerExist() {
+			if strconv.FormatInt(update.SentFrom().ID, 10) != b.OwnerId {
+				continue
+			}
+		}
+
 		configs := middleware(update)
 		for _, config := range configs {
 			bot.Send(config)
@@ -50,4 +58,8 @@ func middleware(update tgbotapi.Update) (configs []tgbotapi.Chattable) {
 	}
 
 	return configs
+}
+
+func (b *Bot) isOwnerExist() bool {
+	return b.OwnerId != ""
 }

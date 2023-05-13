@@ -7,8 +7,9 @@ import (
 
 func main() {
 	bot := telegram.Bot{
-		Token: os.Getenv("TELEGRAM_APITOKEN"),
-		Debug: true,
+		Token:   os.Getenv("TELEGRAM_APITOKEN"),
+		OwnerId: os.Getenv("OWNER_ID"),
+		Debug:   true,
 	}
 
 	bot.Start()
