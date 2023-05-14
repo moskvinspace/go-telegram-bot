@@ -19,9 +19,14 @@ var commands map[string]command
 func initCommands() {
 	commands = map[string]command{
 		startCommand{}.name(): &startCommand{},
+		aiCommand{}.name():    &aiCommand{},
 	}
 }
 
 func getCommand(s string) string {
 	return strings.Split(s, " ")[0]
+}
+
+func getCommandText(s string) string {
+	return strings.Join(strings.Split(s, " ")[1:], " ")
 }
